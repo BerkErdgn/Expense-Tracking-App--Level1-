@@ -47,24 +47,38 @@ class TotalFragment : Fragment() {
 
         // for calculate totalIncome
         val database = requireActivity().openOrCreateDatabase("ExpenseJanuary", AppCompatActivity.MODE_PRIVATE, null)
-        val cursor = database.rawQuery("SELECT * FROM expenseJanuary Where expenseOrIncome = 'Income'", null)
-        val priceIncomeIx = cursor.getColumnIndex("price")
-        while (cursor.moveToNext()) {
-            val priceIncome = cursor.getString(priceIncomeIx)
+        try {
+            val cursor = database.rawQuery("SELECT * FROM expenseJanuary Where expenseOrIncome = 'Income'", null)
+            val priceIncomeIx = cursor.getColumnIndex("price")
+            while (cursor.moveToNext()) {
+                val priceIncome = cursor.getString(priceIncomeIx)
+                priceIncomeList.add(priceIncome)
+            }
+        }catch (e: Exception){
+            e.printStackTrace()
+            val priceIncome = "0"
             priceIncomeList.add(priceIncome)
         }
+
+
         val sumIncome = priceIncomeList.sumOf {
             it.toDouble()
         }
 
         //for calculate total Expense
-        val database2 =requireActivity().openOrCreateDatabase("ExpenseJanuary",AppCompatActivity.MODE_PRIVATE,null)
-        val cursor2 =database2.rawQuery("SELECT * FROM expenseJanuary Where expenseOrIncome = 'Expense'",null)
-        val priceExpenseIx = cursor2.getColumnIndex("price")
-        while (cursor2.moveToNext()){
-            val priceExpense = cursor2.getString(priceExpenseIx)
+        try {
+            val database2 =requireActivity().openOrCreateDatabase("ExpenseJanuary",AppCompatActivity.MODE_PRIVATE,null)
+            val cursor2 =database2.rawQuery("SELECT * FROM expenseJanuary Where expenseOrIncome = 'Expense'",null)
+            val priceExpenseIx = cursor2.getColumnIndex("price")
+            while (cursor2.moveToNext()){
+                val priceExpense = cursor2.getString(priceExpenseIx)
+                priceExpenseList.add(priceExpense)
+            }
+        }catch (e:Exception){
+            val priceExpense = "10"
             priceExpenseList.add(priceExpense)
         }
+
         val sumExpense = priceExpenseList.sumOf {
             it.toDouble()
         }
@@ -92,6 +106,7 @@ class TotalFragment : Fragment() {
             resources.getColor(R.color.purple_500),
             resources.getColor(R.color.teal_200)
         )
+
 
         //Setup Pie Data Set in PieData
         val pieData = PieData(pieDataSet)
